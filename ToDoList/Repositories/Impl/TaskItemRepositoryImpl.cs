@@ -53,7 +53,7 @@ public class TaskItemRepositoryImpl : ITaskItemRepository
 
   public void Delete(Guid id)
   {
-    var taskEntity = _context.TaskItems.Find(id);
+    var taskEntity = _context.TaskItems.SingleOrDefault(t => t.Id.Equals(id));
     if(taskEntity != null)
     {
     _context.TaskItems.Remove(taskEntity);

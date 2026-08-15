@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using ToDoList.Models.Context;
+using ToDoList.Repositories;
+using ToDoList.Repositories.Impl;
+using ToDoList.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +12,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddControllers();
+
+builder.Services.AddScoped<ITaskItemRepository, TaskItemRepositoryImpl>();
+builder.Services.AddScoped<ITaskService>();
 
 builder.Services.AddDbContext<SQLiteContext>(options => 
 options.UseSqlite(

@@ -10,14 +10,10 @@ public class TaskItemConverter : IParser<TaskItemRequest, TaskItem>
     if(origin == null) return null;
     return new TaskItem
     {
-      Id = Guid.NewGuid(),
       Title = origin.Title,
       Description = origin.Description,
       Priority = origin.Priority,
       DueDate = origin.DueDate,
-      IsCompleted = false,
-      CreatedAt = DateTime.Now,
-      CompletedAt = null
     };
   }
 
