@@ -1,8 +1,12 @@
 using Microsoft.EntityFrameworkCore;
+using ToDoList.Data.Converter.Contract;
+using ToDoList.Data.Converter.Impl;
+using ToDoList.Models;
 using ToDoList.Models.Context;
 using ToDoList.Repositories;
 using ToDoList.Repositories.Impl;
 using ToDoList.Services;
+using ToDoList.Services.Impl;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,11 +18,12 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<ITaskItemRepository, TaskItemRepositoryImpl>();
-builder.Services.AddScoped<ITaskService>();
+builder.Services.AddScoped<ITaskService, TaskServiceImpl>();
+builder.Services.AddScoped<IParser<TaskItemRequest, TaskItem>, TaskItemConverter>();
 
 builder.Services.AddDbContext<SQLiteContext>(options => 
 options.UseSqlite(
-    builder.Configuration.GetConnectionString("DefaultConnection")
+    "Data Source=todo.db"
 ));
 
 var app = builder.Build();

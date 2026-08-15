@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-using ToDoList.Data.Converter.Impl;
 using ToDoList.Models;
 using ToDoList.Models.Context;
 
@@ -27,18 +25,15 @@ public class TaskItemRepositoryImpl : ITaskItemRepository
     return _context.TaskItems.ToList();
   }
 
-  public async Task<TaskItem> FindById(Guid id)
+  public async Task<TaskItem?> FindById(Guid id)
   {
     return await _context.TaskItems.FindAsync(id);
   }
 
   public async Task<TaskItem> Update(TaskItem request)
   {
-    if (!Exists(request.Id)) return null;
     var taskEntity = await _context.TaskItems.FindAsync(request.Id);
-
     if (taskEntity == null) return null;
-
     try
     {
       _context.Entry(taskEntity).CurrentValues.SetValues(request);

@@ -4,14 +4,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ToDoList.Data.Context;
+using ToDoList.Models.Context;
 
 #nullable disable
 
 namespace ToDoList.Migrations
 {
     [DbContext(typeof(SQLiteContext))]
-    [Migration("20260814232322_InitialCreate")]
+    [Migration("20260815131954_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -26,17 +26,16 @@ namespace ToDoList.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("CmpletedAt")
+                    b.Property<DateTime?>("CompletedAt")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("DueDate")
+                    b.Property<DateTime?>("DueDate")
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("IsCompleted")

@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace ToDoList.Models;
 
 public class TaskItem
@@ -11,6 +9,12 @@ public class TaskItem
   public DateTime? DueDate {get; set;} 
   public DateTime CreatedAt {get; set;} 
   public DateTime? CompletedAt {get; set;}
-  public bool IsCompleted {get; set;}  
+  public bool IsCompleted {get; private set;}
+
+  public void Concluir()
+  {
+    IsCompleted = true;
+    CompletedAt = DateTime.UtcNow;
+  }  
   
 }

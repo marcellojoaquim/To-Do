@@ -17,11 +17,11 @@ namespace ToDoList.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Title = table.Column<string>(type: "TEXT", nullable: false),
-                    Description = table.Column<string>(type: "TEXT", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: true),
                     Priority = table.Column<int>(type: "INTEGER", nullable: false),
-                    DueDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    DueDate = table.Column<DateTime>(type: "TEXT", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    CmpletedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    CompletedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
                     IsCompleted = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
