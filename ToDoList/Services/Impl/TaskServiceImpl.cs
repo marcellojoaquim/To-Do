@@ -1,5 +1,6 @@
 using ToDoList.Data.Converter.Contract;
 using ToDoList.Data.Converter.Impl;
+using ToDoList.Exceptions;
 using ToDoList.Models;
 using ToDoList.Repositories;
 using ToDoList.Repositories.Impl;
@@ -53,10 +54,10 @@ public class TaskServiceImpl : ITaskService
 
   public async Task<TaskItem> Update(Guid id, TaskItemRequest request)
   {
-    if(request == null || id == Guid.Empty) throw new ArgumentNullException("Id não deve ser nulo");
+    if(request == null || id == Guid.Empty) throw new ArgumentNullException("Id não deve ser nulo.");
     var itemEntity = await _repository.FindById(id);
-    if(itemEntity == null) throw new KeyNotFoundException("Task não encontrada para o id informado");
-    // if(itemEntity.CompletedAt != null && itemEntity.IsCompleted) throw new BusinessException()
+    if(itemEntity == null) throw new KeyNotFoundException("Task não encontrada para o id informado.");
+    if(itemEntity.CompletedAt != null && itemEntity.IsCompleted) throw new BusinessException("Task já concluída.");
     
     itemEntity.Description = request.Description;
     itemEntity.Title = request.Title;
@@ -72,7 +73,7 @@ public class TaskServiceImpl : ITaskService
     if(id == Guid.Empty) throw new ArgumentNullException("Id não deve ser nulo");
     var itemEntity = await _repository.FindById(id);
     if(itemEntity == null) throw new KeyNotFoundException("Task não encontrada para o id informado");
-    // if(itemEntity.IsCompleted) throw new BusinessException()
+    if(itemEntity.IsCompleted) throw new BusinessException("Task já concluída");
     itemEntity.Concluir();
     return itemEntity;
   }
