@@ -1,3 +1,4 @@
+using ToDoList.Controllers.Filter;
 using ToDoList.Data.Converter.Contract;
 using ToDoList.Data.Converter.Impl;
 using ToDoList.Exceptions;
@@ -39,9 +40,10 @@ public class TaskServiceImpl : ITaskService
     _repository.Delete(id);
   }
 
-  public List<TaskItem> FindAll()
+  public async Task<PagedResult<TaskItem>> FindAll(TaskFilterRequest filterRequest)
   {
-    return _repository.FindAll();
+    ValidateFilter(filterRequest);
+    return await _repository.FindAll(filterRequest);
   }
 
   public async Task<TaskItem> FindById(Guid id)
@@ -49,6 +51,7 @@ public class TaskServiceImpl : ITaskService
     if(id == Guid.Empty) throw new ArgumentNullException("Id não deve ser nulo");
 
     var taskEntity = await _repository.FindById(id);
+    if(taskEntity == null) throw new NotFoundException("Task não encontrada para o ID informado");
     return taskEntity;
   }
 
@@ -75,6 +78,56 @@ public class TaskServiceImpl : ITaskService
     if(itemEntity == null) throw new KeyNotFoundException("Task não encontrada para o id informado");
     if(itemEntity.IsCompleted) throw new BusinessException("Task já concluída");
     itemEntity.Concluir();
+    await _repository.Update(itemEntity);
     return itemEntity;
   }
+
+  private static void ValidateFilter(
+        TaskFilterRequest filter)
+    {
+        if (filter.Page < 1)
+            throw new ArgumentException(
+                "Page deve ser maior que zero.");
+
+        if (filter.PageSize < 1)
+            throw new ArgumentException(
+                "PageSize deve ser maior que zero.");
+
+        if (filter.PageSize > 50)
+            throw new ArgumentException(
+                "PageSize não pode ser maior que 50.");
+
+        if (!string.IsNullOrWhiteSpace(filter.Status))
+        {
+            var validStatuses = new[]
+            {
+                "pending",
+                "completed",
+                "all"
+            };
+
+            if (!validStatuses.Contains(
+                filter.Status.ToLower()))
+            {
+                throw new ArgumentException(
+                    "Status inválido.");
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(filter.Direction))
+        {
+            var validDirections = new[]
+            {
+                "asc",
+                "desc"
+            };
+
+            if (!validDirections.Contains(
+                filter.Direction.ToLower()))
+            {
+                throw new ArgumentException(
+                    "Direction inválido.");
+            }
+        }
+    }
 }
