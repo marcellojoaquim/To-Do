@@ -10,6 +10,8 @@ public class TaskItem
   public DateTime CreatedAt {get; set;} 
   public DateTime? CompletedAt {get; set;}
   public bool IsCompleted {get; private set;}
+  public Guid UsuarioId {get; set;}
+  public Usuario Usuario {get; set;} = null!;
 
   public void Concluir()
   {
