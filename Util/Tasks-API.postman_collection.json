@@ -1,0 +1,301 @@
+{
+	"info": {
+		"_postman_id": "fc18f462-c552-45c3-a96e-e1c2494a9723",
+		"name": "Tasks-API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20819029"
+	},
+	"item": [
+		{
+			"name": "Tasks",
+			"item": [
+				{
+					"name": "Buscar-todas",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-User-Id",
+								"value": "E8101326-5946-4FC1-8D64-C83A7E16B845",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5128/api/tasks",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5128",
+							"path": [
+								"api",
+								"tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar-Por-Id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-User-Id",
+								"value": "e8101326-5946-4fc1-8d64-c83a7e16b845",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5128/api/tasks/5A27FE1E-52EF-430B-86A7-D059D7122885",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5128",
+							"path": [
+								"api",
+								"tasks",
+								"5A27FE1E-52EF-430B-86A7-D059D7122885"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Busca com Filtros",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-User-Id",
+								"value": "E8101326-5946-4FC1-8D64-C83A7E16B845",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5128/api/tasks?status=completed&priority=2&orderBy=dueDate&direction=asc&page=1&pageSize=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5128",
+							"path": [
+								"api",
+								"tasks"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "completed"
+								},
+								{
+									"key": "priority",
+									"value": "2"
+								},
+								{
+									"key": "orderBy",
+									"value": "dueDate"
+								},
+								{
+									"key": "direction",
+									"value": "asc"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Criar-Task",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-User-Id",
+								"value": "70baf28a-063e-4e17-aca2-75696cc28062",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Title\": \"Task Marcello\",\n    \"Description\": \"Teste criação com novo usuario\",\n    \"Priority\" : 2,\n    \"DueDate\": \"2026-12-12T00:00:00\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5128/api/tasks",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5128",
+							"path": [
+								"api",
+								"tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Concluir task",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "X-User-Id",
+								"value": "E8101326-5946-4FC1-8D64-C83A7E16B845",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5128/api/tasks/7CABA749-6A10-426C-B1AA-187E2135E916/complete",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5128",
+							"path": [
+								"api",
+								"tasks",
+								"7CABA749-6A10-426C-B1AA-187E2135E916",
+								"complete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar task",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-User-Id",
+								"value": "E8101326-5946-4FC1-8D64-C83A7E16B845",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n            \"title\": \"Estudar DotNet\",\n            \"description\": \"Aprofundar conhecimento sobre Entity Framework\",\n            \"priority\": 1,\n            \"dueDate\": \"2026-12-11T00:00:00\",\n            \"createdAt\": \"2026-08-15T19:45:07.1640562\",\n            \"completedAt\": null,\n            \"isCompleted\": false\n        }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5128/api/tasks/7CABA749-6A10-426C-B1AA-187E2135E916",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5128",
+							"path": [
+								"api",
+								"tasks",
+								"7CABA749-6A10-426C-B1AA-187E2135E916"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remover Task",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-User-Id",
+								"value": "E8101326-5946-4FC1-8D64-C83A7E16B845",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5128/api/tasks/5A27FE1E-52EF-430B-86A7-D059D7122885",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5128",
+							"path": [
+								"api",
+								"tasks",
+								"5A27FE1E-52EF-430B-86A7-D059D7122885"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Usuarios",
+			"item": [
+				{
+					"name": "Buscar Usuario",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5128/api/usuarios/e8101326-5946-4fc1-8d64-c83a7e16b845",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5128",
+							"path": [
+								"api",
+								"usuarios",
+								"e8101326-5946-4fc1-8d64-c83a7e16b845"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Criar usuario",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"Marcello\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5128/api/usuarios",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5128",
+							"path": [
+								"api",
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
