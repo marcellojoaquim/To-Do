@@ -7,7 +7,7 @@ public class TaskItemRequest
 
   [Required]
   [StringLength(80, MinimumLength = 3)]
-  public string Title {get; set;} 
+  public string Title {get; set;} = string.Empty;
 
   [StringLength(400)]
   public string? Description {get; set;}

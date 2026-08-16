@@ -28,3 +28,19 @@ API REST de gerenciamento do tarefas.
 - Acesse a collection no diretório /Util
 - Importe a collection no postman
 
+## API
+
+### API Tasks
+- URL Base: /api/tasks
+
+### API Usuarios
+- URL Base: /api/usuarios
+
+## Regras de negócio
+
+- Uma vez que a tarefa for concluída não poderá mais ser modificada. Retorna 409, mais coerênte em minha opnião.
+- PageSize no máximo 50.
+- Prioridade das tarefas devem está entre 1 e 3.
+- Título deve conter de 3 a 80 caracteres.
+- Descricao deve conter de 0 a 400 caracteres.
+- Criar um nova tarefa deve enviar um usuário existente.

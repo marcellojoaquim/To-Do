@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using ToDoList.Data.Converter.Contract;
 using ToDoList.Data.Converter.Impl;
 using ToDoList.Models;
@@ -9,6 +10,15 @@ using ToDoList.Services;
 using ToDoList.Services.Impl;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog(
+    (context,services, configuration) =>
+    configuration.ReadFrom
+        .Configuration(context.Configuration)
+        .ReadFrom.Services(services)
+        .Enrich.FromLogContext());
+
+    
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -36,7 +46,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
-
+app.UseSerilogRequestLogging();
 app.MapControllers();
 app.UseHttpsRedirection();
 app.Run();
