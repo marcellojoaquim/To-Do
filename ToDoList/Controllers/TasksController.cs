@@ -26,9 +26,9 @@ public class TasksController : ControllerBase
   }
 
   [HttpGet("{id}")]
-  public async Task<ActionResult<TaskItem>> FindById(Guid id)
+  public async Task<ActionResult<TaskItem>> FindById([FromHeader(Name = "X-User-Id")] Guid userId, Guid id)
   {
-    var result = await _service.FindById(id);
+    var result = await _service.FindById(userId, id);
     return Ok(result);
   }
 
@@ -53,23 +53,23 @@ public class TasksController : ControllerBase
   }
 
   [HttpPut("{id}")]
-  public async Task<ActionResult<TaskItem>> Update(Guid id, [FromBody] TaskItemRequest request)
+  public async Task<ActionResult<TaskItem>> Update([FromHeader(Name = "X-User-Id")] Guid userId, Guid id, [FromBody] TaskItemRequest request)
   {
-    var result = await _service.Update(id, request);
+    var result = await _service.Update(userId, id, request);
     return Ok(result);
   }
 
   [HttpPatch("{id}/complete")]
-  public IActionResult Concluir(Guid id)
+  public IActionResult Concluir([FromHeader(Name = "X-User-Id")] Guid userId, Guid id)
   {
-    var result = _service.Concluir(id);
+    var result = _service.Concluir(userId, id);
     return Ok(result);
   }
 
   [HttpDelete("{id}")]
-  public IActionResult Delete(Guid id)
+  public IActionResult Delete([FromHeader(Name = "X-User-Id")] Guid userId, Guid id)
   {
-    _service.Delete(id);
+    _service.Delete(userId, id);
     return NoContent();
   }
 }

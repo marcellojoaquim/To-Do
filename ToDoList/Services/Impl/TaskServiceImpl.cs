@@ -41,10 +41,10 @@ public class TaskServiceImpl : ITaskService
     return taskEntity;
   }
 
-  public void Delete(Guid id)
+  public void Delete(Guid userId, Guid id)
   {
     if(id == Guid.Empty) throw new ArgumentNullException("Id não deve ser nulo");
-    _repository.Delete(id);
+    _repository.Delete(userId, id);
   }
 
   public async Task<PagedResult<TaskItem>> FindAll(Guid id, TaskFilterRequest filterRequest)
@@ -53,19 +53,20 @@ public class TaskServiceImpl : ITaskService
     return await _repository.FindAll(id, filterRequest);
   }
 
-  public async Task<TaskItem> FindById(Guid id)
+  public async Task<TaskItem> FindById(Guid userId, Guid id)
   {
     if(id == Guid.Empty) throw new ArgumentNullException("Id não deve ser nulo");
+    if(userId == Guid.Empty) throw new ArgumentNullException("Id do usuario não deve ser nulo");
 
-    var taskEntity = await _repository.FindById(id);
+    var taskEntity = await _repository.FindById(userId, id);
     if(taskEntity == null) throw new NotFoundException("Task não encontrada para o ID informado");
     return taskEntity;
   }
 
-  public async Task<TaskItem> Update(Guid id, TaskItemRequest request)
+  public async Task<TaskItem> Update(Guid userId, Guid id, TaskItemRequest request)
   {
     if(request == null || id == Guid.Empty) throw new ArgumentNullException("Id não deve ser nulo.");
-    var itemEntity = await _repository.FindById(id);
+    var itemEntity = await _repository.FindById(userId, id);
     if(itemEntity == null) throw new KeyNotFoundException("Task não encontrada para o id informado.");
     if(itemEntity.CompletedAt != null && itemEntity.IsCompleted) throw new BusinessException("Task já concluída.");
     
@@ -78,10 +79,10 @@ public class TaskServiceImpl : ITaskService
     return itemEntity;
   }
 
-  public async Task<TaskItem> Concluir(Guid id)
+  public async Task<TaskItem> Concluir(Guid userId, Guid id)
   {
     if(id == Guid.Empty) throw new ArgumentNullException("Id não deve ser nulo");
-    var itemEntity = await _repository.FindById(id);
+    var itemEntity = await _repository.FindById(userId, id);
     if(itemEntity == null) throw new KeyNotFoundException("Task não encontrada para o id informado");
     if(itemEntity.IsCompleted) throw new BusinessException("Task já concluída");
     itemEntity.Concluir();

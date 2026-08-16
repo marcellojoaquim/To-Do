@@ -47,7 +47,7 @@ public class ExceptionHandlingMiddleware
       _logger.LogWarning("Recurso não encontrado Exception");
       await HandleExceptionAsync(
         context,
-        HttpStatusCode.BadRequest,
+        HttpStatusCode.NotFound,
         ex.Message
       );
     }

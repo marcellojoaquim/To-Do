@@ -26,6 +26,8 @@ public class TaskItemRepositoryImpl : ITaskItemRepository
   {
     IQueryable<TaskItem> query = _context.TaskItems;
 
+    query = query.Where(t => t.UsuarioId == id);
+
     if (!string.IsNullOrWhiteSpace(filterRequest.Status))
     {
       switch (filterRequest.Status.ToLower())
@@ -48,8 +50,6 @@ public class TaskItemRepositoryImpl : ITaskItemRepository
       query = query.Where(t => t.Priority == filterRequest.Priority.Value);
     }
 
-    query = query.Where(t => t.UsuarioId == id);
-
     query = ApplyOrdering(query, filterRequest);
 
     var total = await query.CountAsync();
@@ -71,9 +71,9 @@ public class TaskItemRepositoryImpl : ITaskItemRepository
     };
   }
 
-  public async Task<TaskItem?> FindById(Guid id)
+  public async Task<TaskItem?> FindById(Guid userId, Guid id)
   {
-    return await _context.TaskItems.FindAsync(id);
+    return await _context.TaskItems.FirstOrDefaultAsync(t => t.UsuarioId == userId && t.Id == id);
   }
 
   public async Task<TaskItem> Update(TaskItem request)
@@ -92,9 +92,9 @@ public class TaskItemRepositoryImpl : ITaskItemRepository
     return taskEntity;
   }
 
-  public void Delete(Guid id)
+  public void Delete(Guid userId, Guid id)
   {
-    var taskEntity = _context.TaskItems.SingleOrDefault(t => t.Id.Equals(id));
+    var taskEntity = _context.TaskItems.FirstOrDefault(t => t.UsuarioId == userId && t.Id == id);
     if (taskEntity != null)
     {
       _context.TaskItems.Remove(taskEntity);
