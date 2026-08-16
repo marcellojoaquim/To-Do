@@ -22,7 +22,7 @@ public class TaskItemRepositoryImpl : ITaskItemRepository
     return request;
   }
 
-  public async Task<PagedResult<TaskItem>> FindAll(TaskFilterRequest filterRequest)
+  public async Task<PagedResult<TaskItem>> FindAll(Guid id, TaskFilterRequest filterRequest)
   {
     IQueryable<TaskItem> query = _context.TaskItems;
 
@@ -47,6 +47,8 @@ public class TaskItemRepositoryImpl : ITaskItemRepository
     {
       query = query.Where(t => t.Priority == filterRequest.Priority.Value);
     }
+
+    query = query.Where(t => t.UsuarioId == id);
 
     query = ApplyOrdering(query, filterRequest);
 

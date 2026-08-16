@@ -19,9 +19,9 @@ public class TasksController : ControllerBase
   }
 
   [HttpGet]
-  public async Task<IActionResult> FindAll([FromQuery] TaskFilterRequest filterRequest)
+  public async Task<IActionResult> FindAll([FromHeader(Name = "X-User-Id")] Guid id, [FromQuery] TaskFilterRequest filterRequest)
   {
-    var result = await _service.FindAll(filterRequest);
+    var result = await _service.FindAll(id, filterRequest);
     return Ok(result);
   }
 
@@ -33,10 +33,23 @@ public class TasksController : ControllerBase
   }
 
   [HttpPost]
-  public ActionResult<TaskItem> Create([FromHeader(Name = "")]TaskItemRequest request)
+  public async Task<ActionResult<TaskItemResponse>> Create([FromHeader(Name = "X-User-Id")] Guid id,TaskItemRequest request)
   {
-    var result = _service.Create(request);
-    return CreatedAtAction(nameof(FindById), new {id = result.Id}, result);
+    var result = await _service.Create(id, request);
+    var response = new TaskItemResponse
+    {
+        Id = result.Id,
+        Title = result.Title,
+        Description = result.Description,
+        Priority = result.Priority,
+        DueDate = result.DueDate,
+        CreatedAt = result.CreatedAt,
+        CompletedAt = result.CompletedAt,
+        IsCompleted = result.IsCompleted,
+        UsuarioId = result.UsuarioId
+    };
+
+    return CreatedAtAction(nameof(FindById), new {id = result.Id}, response);
   }
 
   [HttpPut("{id}")]

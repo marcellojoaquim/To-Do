@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using ToDoList.Controllers.Filter;
 using ToDoList.Data.Converter.Contract;
 using ToDoList.Data.Converter.Impl;
@@ -13,19 +14,25 @@ public class TaskServiceImpl : ITaskService
 
   private readonly IParser<TaskItemRequest, TaskItem> _converter;
   private readonly ITaskItemRepository _repository;
+  private readonly IUsuarioRepository _usuarioRepository;
 
-  public TaskServiceImpl(IParser<TaskItemRequest, TaskItem> taskItemConverter, ITaskItemRepository taskItemRepositoryImpl)
+  public TaskServiceImpl(IParser<TaskItemRequest, TaskItem> taskItemConverter, ITaskItemRepository taskItemRepositoryImpl, IUsuarioRepository usuarioRepository)
   {
     _converter = taskItemConverter;
     _repository = taskItemRepositoryImpl;
+    _usuarioRepository = usuarioRepository;
   }
 
-  public TaskItem Create(TaskItemRequest request)
+  public async Task<TaskItem> Create(Guid id, TaskItemRequest request)
   {
     if(request == null) throw new ArgumentNullException("Task não deve ser nula");
+    var usuario = await _usuarioRepository.FindById(id);
+    if(usuario == null) throw new NotFoundException("Usuario não encontrado para o id informado");
 
     var taskEntity = _converter.Parse(request);
     taskEntity.Id = Guid.NewGuid();
+    taskEntity.UsuarioId = id;
+    taskEntity.Usuario = usuario;
     taskEntity.CreatedAt = DateTime.UtcNow;
     taskEntity.CompletedAt = null;
 
@@ -40,10 +47,10 @@ public class TaskServiceImpl : ITaskService
     _repository.Delete(id);
   }
 
-  public async Task<PagedResult<TaskItem>> FindAll(TaskFilterRequest filterRequest)
+  public async Task<PagedResult<TaskItem>> FindAll(Guid id, TaskFilterRequest filterRequest)
   {
     ValidateFilter(filterRequest);
-    return await _repository.FindAll(filterRequest);
+    return await _repository.FindAll(id, filterRequest);
   }
 
   public async Task<TaskItem> FindById(Guid id)

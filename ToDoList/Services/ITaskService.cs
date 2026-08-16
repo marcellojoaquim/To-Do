@@ -5,8 +5,8 @@ namespace ToDoList.Services;
 
 public interface ITaskService
 {
-  TaskItem Create(TaskItemRequest request);
-  Task<PagedResult<TaskItem>> FindAll(TaskFilterRequest filterRequest);
+  Task<TaskItem> Create(Guid id, TaskItemRequest request);
+  Task<PagedResult<TaskItem>> FindAll(Guid id, TaskFilterRequest filterRequest);
   Task<TaskItem?> FindById(Guid id);
   Task<TaskItem> Update(Guid id, TaskItemRequest request);
   void Delete(Guid id);
