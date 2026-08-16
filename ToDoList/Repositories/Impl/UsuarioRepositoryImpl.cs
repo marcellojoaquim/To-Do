@@ -14,21 +14,20 @@ public class UsuarioRepositoryImpl : IUsuarioRepository
 
   public Usuario Create(Usuario request)
   {
-    throw new NotImplementedException();
+    _context.Add(request);
+    _context.SaveChanges();
+    return request;
   }
 
   public void Delete(Guid id)
   {
-    throw new NotImplementedException();
+    var result = _context.Set<Usuario>().Find(id);
+    _context.Remove(result);
+    _context.SaveChanges();
   }
 
-  public Task<Usuario> FindById(Guid id)
+  public async Task<Usuario?> FindById(Guid id)
   {
-    throw new NotImplementedException();
-  }
-
-  public Task<Usuario> Update(Usuario request)
-  {
-    throw new NotImplementedException();
+    return await _context.Usuarios.FindAsync(id);
   }
 }

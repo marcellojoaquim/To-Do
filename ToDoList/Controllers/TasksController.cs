@@ -33,7 +33,7 @@ public class TasksController : ControllerBase
   }
 
   [HttpPost]
-  public ActionResult<TaskItem> Create(TaskItemRequest request)
+  public ActionResult<TaskItem> Create([FromHeader(Name = "")]TaskItemRequest request)
   {
     var result = _service.Create(request);
     return CreatedAtAction(nameof(FindById), new {id = result.Id}, result);

@@ -28,7 +28,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<ITaskItemRepository, TaskItemRepositoryImpl>();
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepositoryImpl>();
 builder.Services.AddScoped<ITaskService, TaskServiceImpl>();
+builder.Services.AddScoped<IUsuarioService, UsuarioServiceImpl>();
 builder.Services.AddScoped<IParser<TaskItemRequest, TaskItem>, TaskItemConverter>();
 
 builder.Services.AddDbContext<SQLiteContext>(options => 
