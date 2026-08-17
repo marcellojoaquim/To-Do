@@ -60,9 +60,9 @@ public class TasksController : ControllerBase
   }
 
   [HttpPatch("{id}/complete")]
-  public IActionResult Concluir([FromHeader(Name = "X-User-Id")] Guid userId, Guid id)
+  public async Task<IActionResult> Concluir([FromHeader(Name = "X-User-Id")] Guid userId, Guid id)
   {
-    var result = _service.Concluir(userId, id);
+    var result = await _service.Concluir(userId, id);
     return Ok(result);
   }
 

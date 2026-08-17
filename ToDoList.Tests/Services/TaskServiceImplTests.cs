@@ -11,6 +11,7 @@ public class TaskServiceImplTests
 {
   private readonly Mock<IParser<TaskItemRequest, TaskItem>> _converterMock;
   private readonly Mock<ITaskItemRepository> _repositoryMock;
+  private readonly Mock<IUsuarioRepository> _usuarioRepositoryMock;
 
   private readonly TaskServiceImpl _service;
 
@@ -18,25 +19,29 @@ public class TaskServiceImplTests
   {
     _converterMock = new Mock<IParser<TaskItemRequest, TaskItem>>();
     _repositoryMock = new Mock<ITaskItemRepository>();
+    _usuarioRepositoryMock = new Mock<IUsuarioRepository>();
 
     _service = new TaskServiceImpl(
         _converterMock.Object,
-        _repositoryMock.Object);
+        _repositoryMock.Object,
+        _usuarioRepositoryMock.Object);
   }
 
   [Fact]
-  public void Create_DeveLancarException_QuandoEnviarNulo()
+  public async Task Create_DeveLancarException_QuandoEnviarNulo()
   {
-    TaskItemRequest request = null;
+    TaskItemRequest? request = null;
+    Guid id = Guid.NewGuid();
 
-    var result = () => _service.Create(request);
+    var result = () => _service.Create(id, request!);
 
-    Assert.Throws<ArgumentNullException>(result);
+    await Assert.ThrowsAsync<ArgumentNullException>(result);
   }
 
   [Fact]
-  public void Create_DeveCriarTaskComSucesso_QuandoEnviadoDadosValidos()
+  public async void Create_DeveCriarTaskComSucesso_QuandoEnviadoDadosValidos()
   {
+    Guid id = Guid.NewGuid();
     var request = new TaskItemRequest
     {
       Title = "Estudar c#",
@@ -56,7 +61,7 @@ public class TaskServiceImplTests
         .Setup(x => x.Parse(request))
         .Returns(entity);
 
-    var result = _service.Create(request);
+    var result = await _service.Create(id, request);
 
     Assert.NotEqual(Guid.Empty, result.Id);
     Assert.NotEqual(default, result.CreatedAt);
@@ -91,10 +96,10 @@ public class TaskServiceImplTests
     };
 
     _repositoryMock
-        .Setup(x => x.FindById(id))
+        .Setup(x => x.FindById(It.IsAny<Guid>(), id))
         .ReturnsAsync(task);
 
-    var result = () => _service.Update(id, request);
+    var result = () => _service.Update(id, id, request);
 
     var exception =
         await Assert.ThrowsAsync<BusinessException>(result);
@@ -122,14 +127,14 @@ public class TaskServiceImplTests
     };
 
     _repositoryMock
-        .Setup(x => x.FindById(id))
+        .Setup(x => x.FindById(It.IsAny<Guid>(), id))
         .ReturnsAsync(task);
 
     _repositoryMock
         .Setup(x => x.Update(It.IsAny<TaskItem>()))
         .ReturnsAsync(task);
 
-    var result = await _service.Update(id, request);
+    var result = await _service.Update(It.IsAny<Guid>(), id, request);
 
     Assert.Equal("Título novo", result.Title);
     Assert.Equal("Descrição nova", result.Description);
@@ -145,7 +150,7 @@ public class TaskServiceImplTests
   {
     var id = Guid.Empty;
 
-    var result = () => _service.Concluir(id);
+    var result = () => _service.Concluir(It.IsAny<Guid>(), id);
 
     await Assert.ThrowsAsync<ArgumentNullException>(result);
   }
@@ -156,10 +161,10 @@ public class TaskServiceImplTests
     var id = Guid.NewGuid();
 
     _repositoryMock
-        .Setup(x => x.FindById(id))
+        .Setup(x => x.FindById(It.IsAny<Guid>(), id))
         .ReturnsAsync((TaskItem?)null);
 
-    var result = () => _service.Concluir(id);
+    var result = () => _service.Concluir(It.IsAny<Guid>(),id);
 
     await Assert.ThrowsAsync<KeyNotFoundException>(result);
   }
@@ -178,10 +183,10 @@ public class TaskServiceImplTests
     task.Concluir();
 
     _repositoryMock
-        .Setup(x => x.FindById(id))
+        .Setup(x => x.FindById(It.IsAny<Guid>(), id))
         .ReturnsAsync(task);
 
-    var result = () => _service.Concluir(id);
+    var result = () => _service.Concluir(It.IsAny<Guid>(), id);
 
     var exception =
         await Assert.ThrowsAsync<BusinessException>(result);
@@ -201,10 +206,10 @@ public class TaskServiceImplTests
     };
 
     _repositoryMock
-        .Setup(x => x.FindById(id))
+        .Setup(x => x.FindById(It.IsAny<Guid>(), id))
         .ReturnsAsync(task);
 
-    var result = await _service.Concluir(id);
+    var result = await _service.Concluir(It.IsAny<Guid>(), id);
 
     Assert.True(result.IsCompleted);
     Assert.NotNull(result.CompletedAt);
