@@ -42,6 +42,11 @@ public class TaskServiceImplTests
   public async void Create_DeveCriarTaskComSucesso_QuandoEnviadoDadosValidos()
   {
     Guid id = Guid.NewGuid();
+    var usuario = new Usuario
+    {
+      Id = id,
+      Nome = "Nome teste"
+    };
     var request = new TaskItemRequest
     {
       Title = "Estudar c#",
@@ -60,6 +65,9 @@ public class TaskServiceImplTests
     _converterMock
         .Setup(x => x.Parse(request))
         .Returns(entity);
+
+    _usuarioRepositoryMock.Setup(x => x.FindById(id))
+    .ReturnsAsync(usuario);
 
     var result = await _service.Create(id, request);
 
